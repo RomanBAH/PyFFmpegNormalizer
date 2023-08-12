@@ -39,3 +39,5 @@ pip install -r requirements.txt
 В работе опирался на информацию из статьи: https://bva.dyndns.info/2018/10/loudness-normalization/
 Для себя вывел оптимальные параметры  
 I=-16:TP=-2:LRA=9
+
+Так же в осове лежит библиотека https://github.com/slhck/ffmpeg-normalize
