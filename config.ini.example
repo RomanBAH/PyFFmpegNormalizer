@@ -6,3 +6,7 @@ srcPath0 = ../Video_01
 ; Список обрабатываемых расширений
 [extList]
 extList = [".avi", ".mp4", ".mkv", ".mpeg", ".wmv", ".flv", ".m4v"]
+
+; Количетво потоков
+[poolSize]
+poolSize = 8

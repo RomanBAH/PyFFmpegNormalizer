@@ -26,8 +26,13 @@ def getConfig(sConfigFile):
                 srcList.append(path)
 
             extList = json.loads(config.get("extList", "extList"))
+            poolSize = config.get("poolSize", "poolSize")
 
-            return { "extList": extList, "srcList": srcList }
+            return {
+                "poolSize": int(poolSize),
+                "extList": extList,
+                "srcList": srcList
+            }
 
         except Exception as e:
             print("Ошибка чтения файла " + sConfigFile + ", проверьте наличие файла и правильность его заполнения.")
@@ -121,7 +126,7 @@ def rebuild_gain_lib(input_file_path, replace=True):
     # Непосредственная конвертация с выводом статус бара
     print("Start rebuild gain LIB...")
     cmd = ['ffmpeg-normalize', str(input_file_path), '-o', s_output_file,
-           '-t', '-16', '-tp', '-2', '-lrt', '9', '-q', '-pr',
+           '-t', '-16', '-tp', '-2', '-lrt', '9', '-q',
            '-c:a', str(inputaudioprops['codec_name']),
            '-b:a', str(inputaudioprops['bit_rate']),
            '-ar', str(inputaudioprops['sample_rate'])
