@@ -124,7 +124,7 @@ def rebuild_gain_lib(input_file_path, replace=True):
     s_output_file = filepathdir + '\\' + '.' + s_time_marker + '.' + fullfilename
 
     # Непосредственная конвертация с выводом статус бара
-    print("Start rebuild gain LIB...")
+    print("Start rebuild gain...")
     cmd = ['ffmpeg-normalize', str(input_file_path), '-o', s_output_file,
            '-t', '-16', '-tp', '-2', '-lrt', '9', '-q',
            '-c:a', str(inputaudioprops['codec_name']),

@@ -14,7 +14,7 @@ i_total_files_skip_count = 0
 i_total_files_action = 0
 l_files_list = []
 
-# define worker function before a Pool is instantiated
+# Функция воркера для многопотока
 def worker(input_file_path):
     global i_total_files_action, i_total_files_error_count, i_total_files_skip_count, i_total_files_success_count
 
@@ -29,22 +29,21 @@ def worker(input_file_path):
 
         # Проверка расширения
         if fextension.lower() in oConfig['extList']:
-            start_time = time.time()
+            #start_time = time.time()
 
             try:
                 scriptFn.rebuild_gain_lib(input_file_path)
                 i_total_files_success_count += 1
 
+                # Вывод отчёта о времени
+                #print("Operation time %s minutes" % round((time.time() - start_time) / 60, 2))
+                #scriptFn.logtofile("Operation time %s minutes" % round((time.time() - start_time) / 60, 2))
+
             except Exception as e:
                 print('Error in Try: ' + str(e))
-                print(str(e))
-                scriptFn.logtofile('Error in Try')
-                scriptFn.logtofile(str(e))
+                scriptFn.logtofile('Error in Try: ' + str(e))
                 i_total_files_error_count += 1
 
-            # Вывод отчёта о времени
-            #print("Operation time %s minutes" % round((time.time() - start_time) / 60, 2))
-            #scriptFn.logtofile("Operation time %s minutes" % round((time.time() - start_time) / 60, 2))
         else:
             print('[SKIP] ' + '(' + fextension + ') ' + input_file_path)
             scriptFn.logtofile('[SKIP] ' + '(' + fextension + ') ' + input_file_path)
@@ -64,8 +63,8 @@ for src in oConfig['srcList']:
     for root, dirs, filenames in os.walk(src, topdown=False):
         # Проход по полученным файлам
         for filename in filenames:
-            input_file_path = os.path.join(root, filename)
-            l_files_list.append(input_file_path)
+            input_f_path = os.path.join(root, filename)
+            l_files_list.append(input_f_path)
 
 # Если файлы найдены то запускаем в мультиворкер
 if len(l_files_list) > 0:
@@ -73,8 +72,8 @@ if len(l_files_list) > 0:
     l_files_list.sort()
     pool = ThreadPool(oConfig['poolSize'])
 
-    for input_file_path in l_files_list:
-        pool.apply_async(worker, (input_file_path,))
+    for input_f_path in l_files_list:
+        pool.apply_async(worker, (input_f_path,))
         sleep(1)
 
     pool.close()
@@ -82,6 +81,7 @@ if len(l_files_list) > 0:
 
 
 # Вывод отчёта
+print('\n')
 print("Total success files " + str(i_total_files_success_count))
 scriptFn.logtofile("Total success files " + str(i_total_files_success_count))
 
@@ -90,7 +90,6 @@ scriptFn.logtofile("Total skip files " + str(i_total_files_skip_count))
 
 print("Total error files " + str(i_total_files_error_count))
 scriptFn.logtofile("Total error files " + str(i_total_files_error_count))
-
 
 print("Operation total time %s minutes" % round((time.time() - start_total_time) / 60, 2))
 scriptFn.logtofile("Operation total time %s minutes" % round((time.time() - start_total_time) / 60, 2))
